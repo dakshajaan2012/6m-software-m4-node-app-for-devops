@@ -27,7 +27,8 @@ jobs:
       - checkout
       - node/install-packages:
           pkg-manager: npm
-      - run: echo "Running tests..."
+      - run: |
+          echo  "Running tests..."
           npm run test
 
 workflows:
