@@ -26,10 +26,9 @@ jobs:
     steps:
       - checkout
       - node/install-packages:
-        pkg-manager: npm
-      - run:
-        echo "Running tests..."
-        npm run test
+          pkg-manager: npm
+      - run: echo "Running tests..."
+          npm run test
 
 workflows:
   simple_workflow:
@@ -38,4 +37,3 @@ workflows:
       - test:
           requires:
             - build
-
