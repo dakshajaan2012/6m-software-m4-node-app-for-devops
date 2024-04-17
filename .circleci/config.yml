@@ -52,5 +52,5 @@ workflows:
 
       # Mini activity
       - publish:
-        requires:
-          - test
+          requires:
+            - test
