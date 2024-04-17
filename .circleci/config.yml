@@ -37,14 +37,10 @@ jobs:
       - setup_remote_docker
       - checkout
       - docker/check
-      - docker/build
-        image: dakshajaan/ educational-space
+      - docker/build:
+          image: dakshajaan/educational-space
       - docker/push:
-          image: dakshajaan/ educational-space
-
-
-
-
+          image: dakshajaan/educational-space
 
 workflows:
   simple_workflow:
@@ -54,8 +50,7 @@ workflows:
           requires:
             - build
 
-    # Mini activity 
+      # Mini activity
       - publish:
         requires:
-            - test
-
+          - test
