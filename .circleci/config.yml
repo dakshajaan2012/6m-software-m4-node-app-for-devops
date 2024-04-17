@@ -39,9 +39,9 @@ jobs:
       - checkout
       - docker/check
       - docker/build:
-          image: dakshajaan/education-space
+          image: dakshajaan/educational-space
       - docker/push:
-          image: dakshajaan/education-space
+          image: dakshajaan/educational-space
           tag: v1.01
 
 workflows:
