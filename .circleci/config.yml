@@ -34,12 +34,12 @@ jobs:
   publish:
     executor: docker/docker
     steps:
-    tag: v1.01
       - setup_remote_docker
       - checkout
       - docker/check
       - docker/build:
           image: dakshajaan/educational-space
+          tag: v1.01
       - docker/push:
           image: dakshajaan/educational-space
           tag: v1.01
