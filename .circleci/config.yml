@@ -34,6 +34,7 @@ jobs:
   publish:
     executor: docker/docker
     steps:
+    tag: v1.01
       - setup_remote_docker
       - checkout
       - docker/check
@@ -41,6 +42,7 @@ jobs:
           image: dakshajaan/education-space
       - docker/push:
           image: dakshajaan/education-space
+          tag: v1.01
 
 workflows:
   simple_workflow:
