@@ -32,15 +32,15 @@ jobs:
           npm run test
 
   publish:
-    excecutor: docker/docker
+    executor: docker/docker
     steps:
       - setup_remote_docker
       - checkout
       - docker/check
       - docker/build:
-          image: dakshajaan/educational-space
+          image: dakshajaan/education-space
       - docker/push:
-          image: dakshajaan/educational-space
+          image: dakshajaan/education-space
 
 workflows:
   simple_workflow:
@@ -49,8 +49,6 @@ workflows:
       - test:
           requires:
             - build
-
-      # Mini activity
       - publish:
           requires:
             - test
