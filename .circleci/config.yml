@@ -15,9 +15,7 @@ jobs:
       - checkout
       - node/install-packages:
           pkg-manager: npm
-      - run: |
-          echo "Installing dependencies..."
-          npm install
+      - run: echo "Installing dependencies..." && npm install
 
   test:
     docker:
@@ -26,12 +24,11 @@ jobs:
       - checkout
       - node/install-packages:
           pkg-manager: npm
-      - run: |
-          echo "Running tests..."
-          npm run test
+      - run: echo "Running tests..." && npm run test
 
   publish:
-    executor: docker/default
+    docker:
+      - image: cimg/node:16.10
     steps:
       - setup_remote_docker
       - checkout
@@ -68,16 +65,19 @@ workflows:
           filters:
             branches:
               only: main
-      # Run all jobs (including publish and deploy) when release branch is updated
+      # Run publish job when release branch is updated
       - publish:
           requires:
             - test
           filters:
             branches:
               only: release
+      # Optionally run deploy job when release branch is updated
       - deploy:
           requires:
             - test
           filters:
             branches:
               only: release
+          when: always # This ensures the deploy job is always considered, but may not always run
+
