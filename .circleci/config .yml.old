@@ -40,11 +40,9 @@ jobs:
       - docker/build:
           image: dakshajaan/educational-space
           tag: v1.01
-      - run:
-          name: Docker Login and Push
-          command: |
-            docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD
-            docker push dakshajaan/educational-space:v1.01
+      - docker/push:
+          image: dakshajaan/educational-space
+          tag: v1.01
 
 workflows:
   simple_workflow:
