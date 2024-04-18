@@ -32,19 +32,30 @@ jobs:
           npm run test
 
   publish:
-    executor: docker/docker
+    excecutor: docker/docker
     steps:
       - setup_remote_docker
       - checkout
       - docker/check
-      - docker/build:
-          image: dakshajaan/educational-space
-          tag: v1.01
+      - docker/build
+        image: dakshajaan/ educational-space
+      - docker/push:
+          image: dakshajaan/ educational-space
+
+  build-and-push:
+    docker:
+      - image: cimg/node:16.10
+    steps:
+      - checkout
       - run:
-          name: Docker Login and Push
+          name: Build Docker image
           command: |
+            echo "Building Docker image..."
+            docker build -t dakshajaan/educational-space:appfordevopsv1 .
             docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD
-            docker push dakshajaan/educational-space:v1.01
+            docker push dakshajaan/educational-space:appfordevopsv1
+
+
 
 workflows:
   simple_workflow:
@@ -56,3 +67,4 @@ workflows:
       - publish:
           requires:
             - test
+            
