@@ -79,5 +79,3 @@ workflows:
           filters:
             branches:
               only: release
-          when: always # This ensures the deploy job is always considered, but may not always run
-
