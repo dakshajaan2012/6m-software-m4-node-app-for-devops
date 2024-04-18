@@ -38,7 +38,7 @@ jobs:
       - checkout
       - docker/check
       - docker/build
-        image: dakshajaan/ educational-space
+          image: dakshajaan/ educational-space
       - docker/push:
           image: dakshajaan/ educational-space
 
