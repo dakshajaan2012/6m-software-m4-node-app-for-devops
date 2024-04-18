@@ -1,13 +1,11 @@
 version: 2.1
 
-# orbs- reusable packages for use
-
+# Orbs - reusable packages for use
 orbs:
   node: circleci/node@5.0.1
   docker: circleci/docker@2.1.4
 
-# jobs- the set of instructions
-
+# Jobs - the set of instructions
 jobs:
   build:
     docker:
@@ -28,19 +26,23 @@ jobs:
       - node/install-packages:
           pkg-manager: npm
       - run: |
-          echo  "Running tests..."
+          echo "Running tests..."
           npm run test
 
   publish:
-    excecutor: docker/docker
+    executor: docker/default
     steps:
       - setup_remote_docker
       - checkout
       - docker/check
-      - docker/build
-          image: dakshajaan/ educational-space
-      - docker/push:
-          image: dakshajaan/ educational-space
+      - docker/build:
+          image: dakshajaan/educational-space
+      - run:
+          name: Docker Login and Push
+          command: |
+            echo "Logging into Docker Hub..."
+            echo "${DOCKERHUB_PASSWORD}" | docker login -u "${DOCKERHUB_USERNAME}" --password-stdin
+            docker push dakshajaan/educational-space
 
   build-and-push:
     docker:
@@ -52,11 +54,11 @@ jobs:
           command: |
             echo "Building Docker image..."
             docker build -t dakshajaan/educational-space:appfordevopsv1 .
-            docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD
+            echo "Logging into Docker Hub..."
+            echo "${DOCKERHUB_PASSWORD}" | docker login -u "${DOCKERHUB_USERNAME}" --password-stdin
             docker push dakshajaan/educational-space:appfordevopsv1
 
-
-
+# Workflows
 workflows:
   simple_workflow:
     jobs:
@@ -67,4 +69,6 @@ workflows:
       - publish:
           requires:
             - test
-            
+      - build-and-push:
+          requires:
+            - publish
