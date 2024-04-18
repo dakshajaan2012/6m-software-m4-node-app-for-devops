@@ -37,26 +37,10 @@ jobs:
       - docker/check
       - docker/build:
           image: dakshajaan/educational-space
-      - run:
-          name: Docker Login and Push
-          command: |
-            echo "Logging into Docker Hub..."
-            echo "${DOCKERHUB_PASSWORD}" | docker login -u "${DOCKERHUB_USERNAME}" --password-stdin
-            docker push dakshajaan/educational-space
-
-  build-and-push:
-    docker:
-      - image: cimg/node:16.10
-    steps:
-      - checkout
-      - run:
-          name: Build Docker image
-          command: |
-            echo "Building Docker image..."
-            docker build -t dakshajaan/educational-space:appfordevopsv1 .
-            echo "Logging into Docker Hub..."
-            echo "${DOCKERHUB_PASSWORD}" | docker login -u "${DOCKERHUB_USERNAME}" --password-stdin
-            docker push dakshajaan/educational-space:appfordevopsv1
+          tag: v1.01
+      - docker/push:
+          image: dakshajaan/educational-space
+          tag: v1.01
 
 # Workflows
 workflows:
@@ -69,6 +53,3 @@ workflows:
       - publish:
           requires:
             - test
-      - build-and-push:
-          requires:
-            - publish
