@@ -1,7 +1,12 @@
 version: 2.1
+
+# Orbs - reusable packages for use
 orbs:
   node: circleci/node@5.0.1
   docker: circleci/docker@2.1.4
+  heroku: circleci/heroku@2.0.0
+
+# Jobs - the set of instructions
 jobs:
   build:
     docker:
@@ -11,8 +16,9 @@ jobs:
       - node/install-packages:
           pkg-manager: npm
       - run: |
-          echo Installing dependencies...”
+          echo "Installing dependencies..."
           npm install
+
   test:
     docker:
       - image: cimg/node:16.10
@@ -21,29 +27,57 @@ jobs:
       - node/install-packages:
           pkg-manager: npm
       - run: |
-          echo “Running tests...”
+          echo "Running tests..."
           npm run test
 
   publish:
-    executor: docker/docker
+    executor: docker/default
     steps:
       - setup_remote_docker
       - checkout
       - docker/check
       - docker/build:
           image: dakshajaan/educational-space
-          tag: v1.01
       - docker/push:
           image: dakshajaan/educational-space
-          tag: v1.01
 
+  deploy:
+    docker:
+      - image: cimg/node:16.10
+    steps:
+      - setup_remote_docker
+      - heroku/install
+      - checkout
+      - run:
+          name: Heroku Container Push
+          command: |
+            heroku container:login
+            heroku container:push web -a dakshajaan-su-devops
+            heroku container:release web -a dakshajaan-su-devops
+
+# Workflows
 workflows:
+  version: 2
   simple_workflow:
     jobs:
+      # Run build and test jobs when main branch is updated
       - build
       - test:
           requires:
             - build
+          filters:
+            branches:
+              only: main
+      # Run all jobs (including publish and deploy) when release branch is updated
       - publish:
           requires:
             - test
+          filters:
+            branches:
+              only: release
+      - deploy:
+          requires:
+            - test
+          filters:
+            branches:
+              only: release
